@@ -71,6 +71,7 @@ ggplot(data = diamonds, aes(x = volume, y = price)) +
 4a. Create prop_initiated
 
 ```{r}
+pf <- read.csv("pseudo_facebook.tsv", sep = "\t")
 pf$prop_initiated <- ifelse(pf$friend_count > 0, c(pf$friendships_initiated/pf$friend_count), 0)
 ```
 
