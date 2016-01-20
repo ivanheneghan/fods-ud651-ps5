@@ -187,7 +187,27 @@ ggplot(aes(x = year, y = subs/gdp), data = merged) +
   ylab("Subs/GDP Ratio") +
   ggtitle("Change in Subs/GDP Ratio over Time")
 
-# Heatmap
-ggplot(aes(x = year, y = gdp, fill = subs), data = merged) +
+# Add mean, median, percentile (10, 50, 90), using cut on GDP
+summary(merged$gdp)
+table(merged$gdp)
+merged$gdpbucket <- cut(merged$gdp, breaks = seq(463, 53630, by = 5000))
+ggplot(aes(x = gdpbucket, y = subs), data = merged) +
+  geom_point(color = "orange") +
+  geom_line(stat = "summary", fun.y = mean, group = 1) +
+  geom_line(stat = "summary", fun.y = quantile, fun.args = list(probs = .1), linetype = 2, color = "blue", group = 1) +
+  geom_line(stat = "summary", fun.y = quantile, fun.args = list(probs = .5), linetype = 2, color = "blue", group = 1) +
+  geom_line(stat = "summary", fun.y = quantile, fun.args = list(probs = .9), linetype = 2, color = "blue", group = 1) +
+  labs(title = "GDP vs Cell Phone Subs",
+       x = "GDP per Capita",
+       y = "Cell Phones per 100 People")
+
+# Heatmaps
+ggplot(aes(x = year, y = country, fill = subs), data = merged) +
+  geom_tile() +
+  scale_fill_gradientn(colors = colorRampPalette(c("blue", "red"))(100))
+ggplot(aes(x = year, y = country, fill = gdp), data = merged) +
+  geom_tile() +
+  scale_fill_gradientn(colors = colorRampPalette(c("blue", "red"))(100))
+ggplot(aes(x = year, y = country, fill = hourly), data = merged) +
   geom_tile() +
   scale_fill_gradientn(colors = colorRampPalette(c("blue", "red"))(100))
